@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  php-nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/www.conf:/etc/php-fpm.d/www.conf
+
+    image: phalcon-student-nginx-php
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql_db
+
+  mysql_db:
+    image: mysql:latest
+    container_name: mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_PASSWORD: QuocAnh-1809
+      MYSQL_USER: root
+      MYSQL_DB: phalcon_student
+    volumes:
+      - ./docker/mysql:/docker-entrypoint-initdb.d/
+networks:
+  internal:
+    driver: bridge
