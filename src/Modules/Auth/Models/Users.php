@@ -21,9 +21,9 @@ use Phalcon\Db\RawValue;
 class Users extends Model
 {
     /**
-     * @Column(type="integer", nullable=true, column="id")
+     * @Column(type="string", nullable=true, column="id")
      */
-    public ?int $id = null;
+    public ?string $id = null;
 
     /**
      * @Column(type="string", nullable=false, column="username")

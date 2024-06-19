@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyApp\User\Repositories;
 
 use MyApp\User\Models\Users;
+use Phalcon\Encryption\Crypt;
 
 /**
  * Class usersRepository
@@ -43,9 +44,10 @@ class UsersRepository
      *
      * @param string $code The unique code of the user.
      */
-    public function getById(int|null $id): ?Users
+    public function getById(string|null $id): ?Users
     {
-        return Users::findFirstById($id);
+        $user = Users::findFirstById($id);
+        return $user;
     }
 
      /**
@@ -66,7 +68,6 @@ class UsersRepository
      *
      * @param Users $user The user model to update.
      * @param array    $data    An associative array of updated user data.
-     *                          Example: ['name' => 'Anh Quoc', 'department' => 'Khoa hoc may tinh']
      */
     public function update(Users $user, array $data)
     {

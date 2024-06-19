@@ -30,6 +30,23 @@ class SecurityPlugin extends Injectable
         $this->persistent = $persistent;
     }
 
+
+    /**
+     * This action is executed before dispatchLoop any action in the application
+     *
+     * @param Event      $event
+     * @param Dispatcher $dispatcher
+     *
+     * @return bool
+     */
+    public function beforeDispatchLoop(Event $event, Dispatcher $dispatcher)
+    {
+        $auth = $this->session->get('auth');
+        if (!$auth) {
+            $dispatcher->setModuleName('error');
+        }
+    }
+
     /**
      * This action is executed before execute any action in the application
      *
@@ -54,9 +71,8 @@ class SecurityPlugin extends Injectable
 
         if (!$acl->isComponent($controller)) {
             $dispatcher->forward([
-                'module'     => 'error',
                 'controller' => 'errors',
-                'action'     => 'show404',
+                'action'     => 'show401',
             ]);
 
             return false;
@@ -65,7 +81,6 @@ class SecurityPlugin extends Injectable
         $allowed = $acl->isAllowed($role, $controller, $action);
         if (!$allowed) {
             $dispatcher->forward([
-                'module'     => 'error',
                 'controller' => 'errors',
                 'action'     => 'show401',
             ]);
@@ -106,8 +121,8 @@ class SecurityPlugin extends Injectable
 
         //Private area resources
         $privateResources = [
-            'users'         => ['index', 'search', 'new', 'edit', 'save', 'create', 'delete'],
-            'students'      => ['index', 'search', 'new', 'edit', 'save', 'create', 'delete']
+            'users'         => ['index', 'search', 'create', 'update', 'delete'],
+            'students'      => ['index', 'search', 'create', 'update', 'delete']
         ];
         foreach ($privateResources as $resource => $actions) {
             $acl->addComponent(new Component($resource), $actions);
@@ -115,6 +130,7 @@ class SecurityPlugin extends Injectable
 
         //Public area resources
         $publicResources = [
+            'auths'    => ['index', 'signin', 'signup', 'signout'],
             'errors'   => ['show401', 'show404', 'show500'],
         ];
         foreach ($publicResources as $resource => $actions) {
@@ -137,7 +153,6 @@ class SecurityPlugin extends Injectable
             }
         }
 
-        //The acl is stored in session, APC would be useful here too
         $this->persistent->acl = $acl;
 
         return $acl;

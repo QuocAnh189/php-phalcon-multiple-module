@@ -20,7 +20,7 @@ class RouterProvider implements ServiceProviderInterface
                 'controller' => 'auths',
                 'action' => 1,
                 'params' => 2,
-            ])->setName('auth-route');
+            ])->setName('auth-route');  
 
             $router->add('/users/:action/:params', [
                 'module' => 'user',

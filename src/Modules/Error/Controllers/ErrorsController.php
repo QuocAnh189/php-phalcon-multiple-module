@@ -26,19 +26,19 @@ class ErrorsController extends ControllerBase
     }
 
     /**
-     * Action to show a 404 Not Found error page.
-     */
-    public function show404Action(): void
-    {
-        $this->response->setStatusCode(404);
-    }
-
-    /**
      * Action to show a 401 Unauthorized error page.
      */
     public function show401Action(): void
     {
         $this->response->setStatusCode(401);
+    }
+
+    /**
+     * Action to show a 404 Not Found error page.
+     */
+    public function show404Action(): void
+    {
+        $this->response->setStatusCode(404);
     }
 
     /**

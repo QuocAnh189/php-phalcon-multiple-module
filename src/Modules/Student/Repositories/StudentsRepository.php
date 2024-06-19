@@ -53,7 +53,6 @@ class StudentsRepository
      * Creates a new student record.
      *
      * @param array $data An associative array of student data.
-     *                    Example: ['name' => 'Anh Quoc', 'department' => 'Khoa hoc may tinh']
      */
     public function create(array $data)
     {

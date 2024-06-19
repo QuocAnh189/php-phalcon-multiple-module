@@ -39,7 +39,7 @@ class StudentsForm extends Form
                 ]
             )
         ]);
-        $this->add($code);
+        // $this->add($code);
     
         // username text field
         $username = new Text('username');

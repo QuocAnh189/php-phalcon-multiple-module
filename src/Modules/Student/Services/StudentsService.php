@@ -7,6 +7,7 @@ namespace MyApp\Student\Services;
 use MyApp\Common\ErrorException;
 use MyApp\Student\Models\Students;
 use MyApp\Student\Repositories\StudentsRepository;
+use Phalcon\Encryption\Security\Random;
 
 /**
  * Class StudentsService
@@ -65,6 +66,9 @@ class StudentsService
     public function createStudent(array $data)
     {
         try {
+            $random = new Random();
+            $data['id'] = $random->uuid();
+            $data['code'] = 'SV2152' . str_pad(strval($random->number(9999)) , 4, '0', STR_PAD_LEFT);
             $this->studentsRepository->create($data); 
         }
         catch (\ErrorException $e) {

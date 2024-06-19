@@ -6,6 +6,7 @@ namespace MyApp\User\Services;
 
 use MyApp\Common\ErrorException;
 use MyApp\User\Models\Users;
+use Phalcon\Encryption\Crypt;
 use MyApp\User\Repositories\UsersRepository;
 
 /**
@@ -48,9 +49,17 @@ class usersService
      *
      * @return users|false|null The User record, false if not found, or null if no result.
      */
-    public function getUserById(int $id): ?users
+    public function getUserById(string $id): ?users
     {
-        return $this->usersRepository->getById($id);
+        $user = $this->usersRepository->getById($id);
+        $crypt = new Crypt();
+        $crypt->setCipher('aes256')->useSigning(false);
+        $user->password = $crypt->decrypt(base64_decode($user->password), 'mykey');
+
+        // $encryptedPassword = base64_decode($user->password);
+        // $user->password = $crypt->decrypt($encryptedPassword, 'mykey');
+
+        return $user;   
     }
 
      /**
@@ -81,7 +90,12 @@ class usersService
     public function updateUser(Users $user, array $data): void
     {
         try {
-            $user = $this->usersRepository->getById($user->id);
+            $crypt = new Crypt();
+            $crypt->setCipher('aes256')->useSigning(false);
+            // $user->password = $crypt->encrypt(base64_decode($user->password), 'mykey');
+            $data['password'] = base64_encode($crypt->encrypt(($data['password']), 'mykey'));
+
+            // $user = $this->usersRepository->getById($user->id);
             if (!$user) {
                 throw new ErrorException(404, 'User not found');
             }
@@ -103,15 +117,15 @@ class usersService
      *
      * @throws ErrorException If the User is not found or if a server error occurs.
      */
-    public function deleteUser(int $id): void
+    public function deleteUser(string $id): void
     {
         try {
-            $User = $this->usersRepository->getById($id);
-            if (!$User) {
+            $user = $this->usersRepository->getById($id);
+            if (!$user) {
                 throw new ErrorException(404, 'User not found');
             }
 
-            $this->usersRepository->delete($User);
+            $this->usersRepository->delete($user);
         }
         catch (\ErrorException $e) {
             if ($e->getCode() === 404) {

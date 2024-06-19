@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyApp\user\Controllers;
+namespace MyApp\User\Controllers;
 
 use MyApp\Common\ControllerBase;
 use MyApp\User\Services\UsersService;
@@ -120,7 +120,7 @@ class UsersController extends ControllerBase
     /**
      * @Put("/users/update/{id}")
      */
-    public function updateAction(int $id)
+    public function updateAction(string $id)
     {
         $user = $this->usersService->getUserById($id);
         if (!$this->request->isPost()) {
@@ -141,7 +141,7 @@ class UsersController extends ControllerBase
         $form = new usersForm();
         $data = $this->request->getPost();
 
-        if (!$form->isValid($data,$user)) {
+        if (!$form->isValid($data, $user)) {
             foreach ($form->getMessages() as $message) {
                 $this->flash->error((string) $message);
             }
@@ -167,14 +167,13 @@ class UsersController extends ControllerBase
     /**
      * @Delete("/users/delete/{id}")
      */
-    public function deleteAction(int $id)
+    public function deleteAction(string $id)
     {
         try {
             $this->usersService->deleteuser($id);
             $this->flash->success('Deleted user successfully');
 
             $this->dispatcher->forward([
-                'module'     => 'user',
                 'controller' => 'users',
                 'action'     => 'search',
             ]);

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MyApp\Providers;
 
-use MyApp\Plugins\NotFoundPlugin;
 use MyApp\Plugins\SecurityPlugin;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\ServiceProviderInterface;
@@ -17,7 +16,6 @@ class DispatcherProvider implements ServiceProviderInterface
     {
         $di->setShared('dispatcher', function () use($di) {
             $eventsManager = new EventsManager();
-            
 
             $eventsManager->attach('dispatch:beforeDispatchLoop', function ($event, $dispatcher) {
                 $moduleName = $dispatcher->getModuleName();
@@ -41,20 +39,10 @@ class DispatcherProvider implements ServiceProviderInterface
                 }
             });
 
-            
-            // // Attach SecurityPlugin to handle security checks
-            // $eventsManager->attach('dispatch:beforeExecuteRoute', new SecurityPlugin());
+            $eventsManager->attach('dispatch:beforeDispatchLoop', new SecurityPlugin());
+            $eventsManager->attach('dispatch:beforeExecuteRoute', new SecurityPlugin());
 
-            // // Attach NotFoundPlugin to handle not-found exceptions
-            
-            // $eventsManager->attach('dispatch:beforeException', new NotFoundPlugin());
-            // $eventsManager->attach('dispatch:beforeExecuteRoute', new SecurityPlugin());
-
-            // Attach SecurityPlugin to handle security checks
-            // $securityPlugin = $di->get(SecurityPlugin::class);
-            // $eventsManager->attach('dispatch:beforeExecuteRoute', $securityPlugin);
-
-            $dispatcher = new Dispatcher();
+            $dispatcher = new Dispatcher(); 
             
             $dispatcher->setEventsManager($eventsManager);
 

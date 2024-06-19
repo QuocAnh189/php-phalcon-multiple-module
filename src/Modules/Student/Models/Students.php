@@ -22,6 +22,11 @@ use Phalcon\Mvc\Model;
 class Students extends Model
 {
     /**
+     * @Column(type="integer", nullable=true, column="id")
+     */
+    public ?string $id = null;
+
+    /**
      * @Primary
      * @var string
      */

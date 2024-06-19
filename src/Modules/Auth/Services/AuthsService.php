@@ -9,6 +9,7 @@ use MyApp\Common\ErrorException;
 use MyApp\Auth\Repositories\AuthsRepository;
 use Phalcon\Db\RawValue;
 use Phalcon\Encryption\Crypt;
+use Phalcon\Encryption\Security\Random;
 
 /**
  * Class AuthsService
@@ -81,6 +82,8 @@ class AuthsService
         $encryptedPassword = $crypt->encrypt($postData['password'], 'mykey');
         $newUser->password = base64_encode($encryptedPassword);
 
+        $random = new Random();
+        $newUser->id = $random->uuid(); 
         $newUser->created_at = new RawValue('now()');
 
         try {

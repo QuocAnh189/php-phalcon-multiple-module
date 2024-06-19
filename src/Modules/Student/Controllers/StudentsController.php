@@ -9,6 +9,7 @@ use MyApp\Student\Services\StudentsService;
 use MyApp\Student\Forms\StudentsForm;
 use MyApp\Student\Models\Students;
 use Phalcon\Mvc\Model\Criteria;
+use Phalcon\Encryption\Security\Random;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 
 /**
@@ -35,7 +36,7 @@ class StudentsController extends ControllerBase
     }
 
     /**
-     * @Get("students/index")
+     * @Get("/students")
      */
     public function indexAction()
     {
@@ -43,7 +44,7 @@ class StudentsController extends ControllerBase
     }
 
     /**
-     * @Get("students/:params")
+     * @Get("/students/:params")
      */
     public function searchAction()
     {
@@ -87,7 +88,7 @@ class StudentsController extends ControllerBase
     }
 
     /**
-     * @Post("students/create")
+     * @Post("/students/create")
      */
     public function createAction()
     {
@@ -120,7 +121,7 @@ class StudentsController extends ControllerBase
     }
 
     /**
-     * @Put("students/update")
+     * @Put("/students/update")
      */
     public function updateAction(string $code)
     {
@@ -167,7 +168,7 @@ class StudentsController extends ControllerBase
     }
 
     /**
-     * @Delete("students/delete")
+     * @Delete("/students/delete")
      */
     public function deleteAction(string $code)
     {
